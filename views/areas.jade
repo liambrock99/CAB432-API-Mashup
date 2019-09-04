@@ -1,0 +1,8 @@
+extends layout
+block content
+ div results for #{query}
+ each obj in results
+    a(
+     href='/api/upcomingEvents?id=' + obj.metroArea.id
+     style={display: "block"}
+    )=obj.city.displayName + ', ' + obj.city.state.displayName + ', ' + obj.city.country.displayName

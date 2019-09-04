@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1= title
+  div search for an area
+  form(method='GET' action='/api/area')
+   input(type="text", name="area")
