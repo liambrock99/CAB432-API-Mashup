@@ -1,8 +1,13 @@
 extends layout
 block content
- div results for #{query}
- each obj in results
-    a(
-     href='/api/upcomingEvents?id=' + obj.metroArea.id
-     style={display: "block"}
-    )=obj.city.displayName + ', ' + obj.city.state.displayName + ', ' + obj.city.country.displayName
+ div Results for: '#{query}'
+ br
+ each obj in areas
+   a(href='/api/upcomingEvents?id=#{obj.metroArea.id}')
+    if (obj.metroArea.state === undefined)
+     div #{obj.metroArea.displayName}, #{obj.metroArea.country.displayName}
+    else  
+     div #{obj.metroArea.displayName}, #{obj.metroArea.state.displayName}, #{obj.metroArea.country.displayName}
+   if (obj.city.displayName !== obj.metroArea.displayName)
+    div including #{obj.city.displayName}
+   br

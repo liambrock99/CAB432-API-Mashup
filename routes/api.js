@@ -19,27 +19,36 @@ spotifyApi
     console.log(err.message);
   });
 
+/**
+ * /api route
+ */
 router.get("/", (req, res) => {
   res.end();
 });
 
-// Get array of areas for :query
+
+/**
+ * GET /area
+ * 
+ */
 router.get("/area", async (req, res) => {
 
-  let response = { results: [] }
+  let areas = [];
   const query = req.query.area;
+  const url = songkickBaseUrl + `search/locations.json?query=${query}&apikey=${songkickApiKey}`;
 
   if (query === "") res.end();
 
   try {
-    const url = songkickBaseUrl + `search/locations.json?query=${query}&apikey=${songkickApiKey}`;
-    // console.log(`Fetching: ${url}`) 
-
     const data = await axios.get(url).then(res => { return res.data.resultsPage.results.location } );
-    // console.log(`Finished fetching: ${url}`)
-    if (data !== undefined) response.results = data;
-    res.render('areas', {'results': response.results, query: query});
 
+    if (data !== undefined) areas = data;
+
+    if (areas.length > 0) {
+      res.render('areas', { areas, query });
+    } else {
+      res.render('noResults');
+    }
   } catch (err) {
       console.log(err.message);
       res.status(500).json({ message: err.message });
@@ -51,18 +60,19 @@ router.get("/area", async (req, res) => {
 router.get("/upcomingEvents", async (req, res) => {
 
     const query = req.query.id;
-    let response = { results: [] };
+    const url = songkickBaseUrl + `metro_areas/${query}/calendar.json?apikey=${songkickApiKey}`;
+    let events = []
 
     try {
-      const url = songkickBaseUrl + `metro_areas/${query}/calendar.json?apikey=${songkickApiKey}`;
-      // console.log(`Fetching: ${url}`);
-
       const data = await axios.get(url).then(res => {return res.data.resultsPage.results.event;})
-      // console.log(`Finished fetching: ${url}`)
 
-      if (data !== undefined) response.results = data;
-      console.log(response.results[0]);
-      res.render('upcomingEvents', response)
+      if (data !== undefined) events = data; 
+
+      if (events.length > 0) {
+        res.render('upcomingEvents', { events })
+      } else {
+        res.render('noResults');
+      }
 
     } catch (err) {
       console.log(err.message);
@@ -72,15 +82,35 @@ router.get("/upcomingEvents", async (req, res) => {
 
 
 // Search for an artist
-router.get("/artist/:query", async (req, res) => {
+router.get("/artist", async (req, res) => {
+
+    const query = req.query.artist;
+    let artist;
+    let albums;
+    let top_tracks
+    let id;
+
     try {
-        const response = { artists: [] }
-        const results = await spotifyApi.searchArtists(req.params.query, {limit: 1}).then(res => {return res.body.artists.items})
-        if (results !== undefined) response.artists = results;
-        res.status(200).json(results);
+        const data = await spotifyApi.searchArtists(query, {limit: 1}).then(res => {return res.body.artists.items})
+
+        if (data.length > 0) {
+          artist = data[0];
+        } else {
+          res.render('noResults');
+          return;
+        }
+
+        id = artist.id;
+
+        albums = await spotifyApi.getArtistAlbums(`${id}`, { include_groups: 'album,single' }).then(res => { return res.body.items })
+        top_tracks = await spotifyApi.getArtistTopTracks(`${id}`, 'AU').then(res => { return res.body.tracks })
+
+        res.render('artist',  { artist, albums, top_tracks });
+
     } catch (err) {
         console.log(err.message);
-        res.status(500).json({ message: err.message })
     }
+
 }) 
+
 module.exports = router;

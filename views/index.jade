@@ -1,7 +1,8 @@
 extends layout
 
 block content
-  h1= title
-  div search for an area
-  form(method='GET' action='/api/area')
-   input(type="text", name="area")
+  div(class='block block-1')
+   div(class='block-header') Find upcoming live music events near you
+   form(class='pure-form block-form' method='GET' action='/api/area')
+    input(class='pure-input-1-4' type="text", name="area")
+  div(class='block block-2')

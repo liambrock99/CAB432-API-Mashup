@@ -1,8 +1,29 @@
 extends layout
 
 block content
- each obj in results
-    a(
-     href="/artist?artist=" + obj.performance[0].artist.displayName
-     style={display: "block"}
-    )=obj.displayName
+ each event in events
+    div Upcoming #{event.type}
+
+    if (event.performance !== undefined)
+
+     if (event.type === 'Concert')
+      each performance in event.performance 
+       if (performance.billing === 'headline')
+        a(href='/api/artist?artist=#{performance.artist.displayName}')
+         div(class='font-size-20 inline-block')= performance.artist.displayName
+       else
+        a(href='/api/artist?artist=#{performance.artist.displayName}')
+         div(class='inline-block')= performance.artist.displayName
+
+     if (event.type === 'Festival')
+      div(class='font-size-20')= event.displayName
+      each performance in event.performance
+       a(href='/api/artist?artist=#{performance.artist.displayName}')
+        div(class='inline-block')= performance.artist.displayName
+
+    else
+     div= event.displayName
+
+    div #{event.venue.displayName}, #{event.location.city}
+    br
+    hr

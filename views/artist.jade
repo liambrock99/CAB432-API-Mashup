@@ -1,0 +1,15 @@
+extends layout
+block content
+  img(src=artist.images[1].url)
+  div=artist.name
+  div Popularity: #{artist.popularity}
+  div Followers: #{artist.followers.total}
+  br
+  div Top tracks:
+  br
+  each obj in top_tracks
+   div= obj.name
+  br
+  each obj in albums
+   a(href=obj.external_urls.spotify)
+    img(src=obj.images[1].url)

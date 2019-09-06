@@ -3,8 +3,13 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet' href='https://unpkg.com/purecss@1.0.1/build/pure-min.css' integrity='sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47' crossorigin='anonymous')
+    script(src="https://kit.fontawesome.com/652c22a20d.js")
+    
   body
-    nav
-      a(href="/") Home
-    hr
+    div(class='pure-menu pure-menu-horizontal')
+      ul(class='pure-menu-list')
+       a(class='pure-menu-item' href='/')
+        i(class='fas fa-home pure-menu-item pure-menu-link')
+      div(class='pure-menu-heading') CAB432 API Mashup
     block content
