@@ -91,3 +91,68 @@ a:hover {
   background: #333;
   background-image: linear-gradient(to right, #ccc, #333, #ccc)
 }
+
+
+/* CSS for the /artist route DCDCDC*/
+.artist-banner {
+  background-color: #DCDCDC;
+  display: grid;
+  grid-template-columns: 80% 20%;
+  grid-template-rows: 300px;
+  padding: 50px 80px;
+  border-bottom: 1px solid darkgrey;
+}
+
+.artist-banner h1 {
+  font-size: 50px;
+}
+
+.artist-banner-img {
+  border: 2px solid darkgrey;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: auto;
+}
+
+.artist-banner-description {
+ 
+}
+
+.artist-banner-name {
+  font-size: 50px;
+  margin-bottom: 100px;
+}
+
+.artist-banner-subtext {
+  font-size: 20px;
+}
+
+.artist-albums {
+  margin: auto;
+  width: 70%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.artist-top-tracks {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  height: 300px;
+}
+
+.artist-top-tracks * {
+  text-align: center;
+}
+
+.albums-div {
+  height: 100px;
+  background-color: #DCDCDC;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 150px;
+  border-top: 1px solid darkgrey;
+  border-bottom: 1px solid darkgrey;
+}

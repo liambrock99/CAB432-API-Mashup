@@ -7,7 +7,7 @@ block content
    div
     div(class='upcoming-event')
      div(style='margin-bottom: 10px')
-      a(href=event.uri)
+      a(href=event.uri target='_blank')
        span(class='upcoming-tag') Upcoming #{event.type}
 
      if event.end !== undefined
@@ -27,9 +27,9 @@ block content
         
       if event.type === 'Festival'
        div(class='font-size-20')= event.displayName
-        each performance in event.performance
-         a(href='/api/artist?artist=#{performance.artist.displayName}')
-          div(class='inline-block')= performance.artist.displayName
+       each performance in event.performance
+        a(href='/api/artist?artist=#{performance.artist.displayName}')
+         div(class='inline-block')= performance.artist.displayName
 
      else
       div= event.displayName

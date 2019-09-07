@@ -29,8 +29,8 @@ router.get("/area", async (req, res) => {
   const query = req.query.area;
   const url = songkickBaseUrl + `search/locations.json?query=${query}&apikey=${songkickApiKey}`;
 
-  if (query.length === 0) {
-    res.redirect('/');
+  if (query === undefined || query.length === 0) {
+    res.render('noResults')
     return;
   }
 
@@ -46,7 +46,6 @@ router.get("/area", async (req, res) => {
     }
   } catch (err) {
       console.log(err.message);
-      res.status(500).json({ message: err.message });
   }
 });
 
@@ -69,6 +68,7 @@ router.get("/upcomingEvents", async (req, res) => {
 
     } catch (err) {
       console.log(err.message);
+      res.render('error');
     }
 });
 

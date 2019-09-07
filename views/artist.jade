@@ -1,15 +1,25 @@
 extends layout
 block content
-  img(src=artist.images[1].url)
-  div=artist.name
-  div Popularity: #{artist.popularity}
-  div Followers: #{artist.followers.total}
-  br
-  div Top tracks:
-  br
-  each obj in top_tracks
-   div= obj.name
-  br
-  each obj in albums
-   a(href=obj.external_urls.spotify)
-    img(src=obj.images[1].url)
+  div(class='artist-banner')
+   div(class='artist-banner-description')
+    a(href=artist.external_urls.spotify)
+     div(class='artist-banner-name')= artist.name
+    div(class='artist-banner-subtext') Popularity: #{artist.popularity}
+    div(class='artist-banner-subtext') Followers: #{artist.followers.total}
+   div(style='background-image: url(#{artist.images[1].url})' class='artist-banner-img')
+  div(class='artist-top-tracks')
+   div(style='font-size: 30px') Top Tracks
+   br
+   each track in top_tracks
+    div
+     div(style='display: inline-block; width: 20%')
+      div(style='font-size: 16px; display: inline; float: left')=track.name
+      a(href=track.preview_url target='_blank' style='float: right')
+       i(class='fas fa-play-circle' style='font-size: 16px; color: #009dff')
+  div(class='albums-div')
+   div(style='display: inline; font-size: 30px') Albums
+  div
+   div(class='artist-albums')
+    each album in albums
+     a(href=album.external_urls.spotify target='_blank')
+      img(src=album.images[1].url)
