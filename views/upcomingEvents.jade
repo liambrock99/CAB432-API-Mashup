@@ -1,29 +1,38 @@
 extends layout
 
 block content
- each event in events
-    div Upcoming #{event.type}
+ div(class='upcoming-events-block')
+  h1 Found #{events.length} upcoming events...
+  each event in events
+   div
+    div(class='upcoming-event')
+     div(style='margin-bottom: 10px')
+      a(href=event.uri)
+       span(class='upcoming-tag') Upcoming #{event.type}
 
-    if (event.performance !== undefined)
+     if event.end !== undefined
+       div #{event.start.date} - #{event.end.date}
+     else
+       div #{event.start.date}
 
-     if (event.type === 'Concert')
-      each performance in event.performance 
-       if (performance.billing === 'headline')
-        a(href='/api/artist?artist=#{performance.artist.displayName}')
-         div(class='font-size-20 inline-block')= performance.artist.displayName
-       else
-        a(href='/api/artist?artist=#{performance.artist.displayName}')
-         div(class='inline-block')= performance.artist.displayName
+     if event.performance !== undefined
+      if event.type === 'Concert'
+       each performance, i in event.performance 
+        if i === 0
+         a(href='/api/artist?artist=#{performance.artist.displayName}')
+          div(class='font-size-20')= performance.artist.displayName
+        else
+         a(href='/api/artist?artist=#{performance.artist.displayName}')
+          div= performance.artist.displayName 
+        
+      if event.type === 'Festival'
+       div(class='font-size-20')= event.displayName
+        each performance in event.performance
+         a(href='/api/artist?artist=#{performance.artist.displayName}')
+          div(class='inline-block')= performance.artist.displayName
 
-     if (event.type === 'Festival')
-      div(class='font-size-20')= event.displayName
-      each performance in event.performance
-       a(href='/api/artist?artist=#{performance.artist.displayName}')
-        div(class='inline-block')= performance.artist.displayName
+     else
+      div= event.displayName
 
-    else
-     div= event.displayName
-
-    div #{event.venue.displayName}, #{event.location.city}
-    br
-    hr
+     div #{event.venue.displayName}, #{event.location.city}
+     hr

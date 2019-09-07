@@ -9,7 +9,6 @@ const spotifyApi = new SpotifyWebApi({
 const songkickApiKey = process.env.SONGKICK_API_KEY;
 const songkickBaseUrl = "https://api.songkick.com/api/3.0/";
 
-// authorize server with spotify to make api calls
 spotifyApi
   .clientCredentialsGrant()
   .then(data => {
@@ -19,28 +18,24 @@ spotifyApi
     console.log(err.message);
   });
 
-/**
- * /api route
- */
+
 router.get("/", (req, res) => {
   res.end();
 });
 
-
-/**
- * GET /area
- * 
- */
 router.get("/area", async (req, res) => {
 
   let areas = [];
   const query = req.query.area;
   const url = songkickBaseUrl + `search/locations.json?query=${query}&apikey=${songkickApiKey}`;
 
-  if (query === "") res.end();
+  if (query.length === 0) {
+    res.redirect('/');
+    return;
+  }
 
   try {
-    const data = await axios.get(url).then(res => { return res.data.resultsPage.results.location } );
+    const data = await axios.get(url).then(res => res.data.resultsPage.results.location);
 
     if (data !== undefined) areas = data;
 
@@ -56,15 +51,13 @@ router.get("/area", async (req, res) => {
 });
 
 
-// Get upcoming events for area with :areaID
 router.get("/upcomingEvents", async (req, res) => {
-
-    const query = req.query.id;
-    const url = songkickBaseUrl + `metro_areas/${query}/calendar.json?apikey=${songkickApiKey}`;
-    let events = []
-
     try {
-      const data = await axios.get(url).then(res => {return res.data.resultsPage.results.event;})
+      const query = req.query.id;
+      const url = songkickBaseUrl + `metro_areas/${query}/calendar.json?apikey=${songkickApiKey}`;
+      let events = []
+  
+      const data = await axios.get(url).then(res => res.data.resultsPage.results.event)
 
       if (data !== undefined) events = data; 
 
@@ -76,36 +69,34 @@ router.get("/upcomingEvents", async (req, res) => {
 
     } catch (err) {
       console.log(err.message);
-      res.status(500).json({ message: err.message });
     }
 });
 
-
-// Search for an artist
 router.get("/artist", async (req, res) => {
-
-    const query = req.query.artist;
-    let artist;
-    let albums;
-    let top_tracks
-    let id;
-
     try {
-        const data = await spotifyApi.searchArtists(query, {limit: 1}).then(res => {return res.body.artists.items})
+        const query = req.query.artist;
+        let artist
+        let artists;
+        let id;
+        let albums;
+        let top_tracks;
+        let resolved;
 
-        if (data.length > 0) {
-          artist = data[0];
+        artists = await spotifyApi.searchArtists(query, {limit: 1}).then(res => res.body.artists.items)
+
+        if (artists.length > 0) {
+          artist = artists[0];
+          id = artist.id;
         } else {
           res.render('noResults');
           return;
         }
 
-        id = artist.id;
+        albums = spotifyApi.getArtistAlbums(`${id}`, { include_groups: 'album' }).then(res => res.body.items)
+        top_tracks = spotifyApi.getArtistTopTracks(`${id}`, 'AU').then(res => res.body.tracks)
+        resolved = await Promise.all([albums, top_tracks]);
 
-        albums = await spotifyApi.getArtistAlbums(`${id}`, { include_groups: 'album,single' }).then(res => { return res.body.items })
-        top_tracks = await spotifyApi.getArtistTopTracks(`${id}`, 'AU').then(res => { return res.body.tracks })
-
-        res.render('artist',  { artist, albums, top_tracks });
+        res.render('artist',  { artist, albums: resolved[0], top_tracks: resolved[1] });
 
     } catch (err) {
         console.log(err.message);
