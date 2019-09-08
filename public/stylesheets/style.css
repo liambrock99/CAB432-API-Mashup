@@ -144,11 +144,12 @@ a {
 .event-location {
   margin-top: 3px;
   display: inline-block;
-  margin-right: 3px;
+  margin-right: 8px;
 }
 
 .event-location-icon {
   color: red;
+  font-size: 18px;
 }
 
 /* End upcomingEvents.jade */
