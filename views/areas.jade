@@ -1,18 +1,26 @@
 extends layout
 block content
- div(class='area-results-block')
-  h1(style='text-align: left') Search for events near you
-  form(class='pure-form' style='text-align: left; margin-bottom: 20px' method='GET' action='/api/area')
-     input(class='pure-input-1-4' type="text" placeholder=query name="area")
-     button(class='pure-button pure-button-primary' type='submit') Go
 
-  each obj in areas
-    div(class='area')
-     a(href='/api/upcomingEvents?id=#{obj.metroArea.id}')
-      if obj.metroArea.state === undefined
-       div(class='area-name') #{obj.metroArea.displayName}, #{obj.metroArea.country.displayName}
-      else  
-       div(class='area-name') #{obj.metroArea.displayName}, #{obj.metroArea.state.displayName}, #{obj.metroArea.country.displayName}
-     if obj.city.displayName !== obj.metroArea.displayName
-      div(class='area-subtext') including #{obj.city.displayName}
-     hr
+ div(class='area-results-page')
+
+  div(class='area-results-explanation')
+   div(style='font-size: 2em') Results
+   div #{areas.length} results found for '#{query}'
+
+  div(class='area-search-form')
+   form(class='pure-form' method='GET' action='/api/area')
+    input(class='pure-input-1-4' type="text" placeholder=query name="q")
+    button(class='pure-button pure-button-primary' type='submit') Search
+
+  div(class='area-results')
+   each obj in areas
+    div(class='area-result')
+     div(class='area-result-contents')
+      a(href='/api/upcomingEvents?id=#{obj.metroArea.id}')
+       if obj.metroArea.state === undefined
+        div #{obj.metroArea.displayName}, #{obj.metroArea.country.displayName}
+       else  
+        div #{obj.metroArea.displayName}, #{obj.metroArea.state.displayName}, #{obj.metroArea.country.displayName}
+      if obj.city.displayName !== obj.metroArea.displayName
+       div including #{obj.city.displayName}
+      hr

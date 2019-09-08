@@ -20,56 +20,88 @@ spotifyApi
 
 
 router.get("/", (req, res) => {
-  res.end();
+  res.redirect('/');
 });
 
+
+function isValid(str) {
+  if (str === undefined) return false;
+  if (str === null) return false;
+  // Trim whitespace then check length
+  str = str.trim();
+  if (str.length === 0) return false;
+  return true;
+}
+
+/**
+ * Usage: /area?q=""
+ * Search the Songkick API search endpoint for locations 
+ */
 router.get("/area", async (req, res) => {
-
-  let areas = [];
-  const query = req.query.area;
-  const url = songkickBaseUrl + `search/locations.json?query=${query}&apikey=${songkickApiKey}`;
-
-  if (query === undefined || query.length === 0) {
-    res.render('noResults')
-    return;
-  }
-
-  try {
-    const data = await axios.get(url).then(res => res.data.resultsPage.results.location);
-
-    if (data !== undefined) areas = data;
-
-    if (areas.length > 0) {
-      res.render('areas', { areas, query });
-    } else {
+  try { 
+    // Check if query string is valid
+    const query = req.query.q;
+    if (!isValid(query)) {
+      console.log('wasnt valid???')
       res.render('noResults');
+      return;
     }
+
+    let areas = []; // array of returned areas
+    const url = songkickBaseUrl + `search/locations.json?query=${query}&apikey=${songkickApiKey}`; // url to fetch
+
+    const data = await axios.get(url).then(res => res.data.resultsPage);
+    
+    // Throw an error if a bad request was made
+    if (data.status === 'error') throw new Error('Invalid Request');
+
+    // If no results were found, render noResults.jade
+    if (Object.keys(data.results).length === 0) {
+      console.log('whjatttt');
+      res.render('noResults');
+      return;
+    }
+    
+    areas = data.results.location;
+    res.render('areas', { areas, query });
   } catch (err) {
       console.log(err.message);
   }
 });
 
 
+/**
+ * Usage: /area?id=""
+ * Use SongKick API to get the upcoming events for area with given id
+ */
 router.get("/upcomingEvents", async (req, res) => {
-    try {
-      const query = req.query.id;
-      const url = songkickBaseUrl + `metro_areas/${query}/calendar.json?apikey=${songkickApiKey}`;
-      let events = []
-  
-      const data = await axios.get(url).then(res => res.data.resultsPage.results.event)
-
-      if (data !== undefined) events = data; 
-
-      if (events.length > 0) {
-        res.render('upcomingEvents', { events })
-      } else {
-        res.render('noResults');
-      }
-
-    } catch (err) {
-      console.log(err.message);
-      res.render('error');
+  try {
+    // Check if query string is valid
+    const id = req.query.id;
+    if (!isValid(id)) {
+      res.render('noResults');
+      return;
     }
+
+    let events = []; // array or returned events
+    const url = songkickBaseUrl + `metro_areas/${id}/calendar.json?apikey=${songkickApiKey}`; // url to fetch
+
+    const data = await axios.get(url).then(res => res.data.resultsPage);
+    
+    // Throw an error if a bad request was made
+    if (data.status === 'error') throw new Error('Invalid Request');
+
+    // If no results were found, render noResults.jade
+    if (Object.keys(data.results).length === 0) {
+      res.render('noResults');
+      return;
+    }
+
+    events = data.results.event;
+    res.render('upcomingEvents', { events })
+  } catch (err) {
+    console.log(err.message);
+  }
 });
 
 router.get("/artist", async (req, res) => {

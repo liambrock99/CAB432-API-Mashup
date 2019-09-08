@@ -1,9 +1,9 @@
 extends layout
 
 block content
-  div(class='block block-1')
-   div(class='block-header') Find upcoming live music events near you
-   form(class='pure-form block-form' method='GET' action='/api/area')
-    input(class='pure-input-1-4' type="text", name="area")
-    button(class='pure-button pure-button-primary' type='submit') Search
-  div(class='block block-2')
+  div(class='index-banner')
+   div(class='index-banner-item')
+    div(class='index-banner-text') Find live music near you
+    form(class='pure-form' method='GET' action='/api/area')
+     input(class='pure-input-1-4' type="text", name="q" placeholder='Brisbane, QLD, Australia')
+     button(class='pure-button pure-button-primary' type='submit') Search
