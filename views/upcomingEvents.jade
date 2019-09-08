@@ -1,38 +1,42 @@
 extends layout
 
 block content
- div(class='upcoming-events-block')
-  h1 Found #{events.length} upcoming events...
-  each event in events
-   div
-    div(class='upcoming-event')
-     div(style='margin-bottom: 10px')
-      a(href=event.uri target='_blank')
-       span(class='upcoming-tag') Upcoming #{event.type}
+ div(class='events-results-page')
 
-     if event.end !== undefined
-       div #{event.start.date} - #{event.end.date}
-     else
-       div #{event.start.date}
+  div(class='events-results-explanation')
+   div(style='font-size: 2em') Results
+   div Found #{events.length} upcoming events 
 
-     if event.performance !== undefined
-      if event.type === 'Concert'
-       each performance, i in event.performance 
-        if i === 0
-         a(href='/api/artist?artist=#{performance.artist.displayName}')
-          div(class='font-size-20')= performance.artist.displayName
-        else
-         a(href='/api/artist?artist=#{performance.artist.displayName}')
-          div= performance.artist.displayName 
-        
+  div(class='events-results') 
+   each event in events 
+    div(class='event-result')
+     div(class='event-tag') UPCOMING #{event.type.toUpperCase()}
+
+     if event.end
+      div #{event.start.date} to #{event.end.date}
+     else  
+      div= event.start.date
+
+     if event.performance.length > 0
       if event.type === 'Festival'
-       div(class='font-size-20')= event.displayName
-       each performance in event.performance
-        a(href='/api/artist?artist=#{performance.artist.displayName}')
-         div(class='inline-block')= performance.artist.displayName
+       div(class='event-title')= event.displayName
+       div(class='event-flex')
+        each performance in event.performance
+         a(target='_blank' href='/api/artist?q=#{performance.displayName}')
+          div(class='event-flex-item')= performance.displayName
 
+      if event.type === 'Concert'
+       a(target='_blank' href='/api/artist?q=#{event.performance[0].displayName}')
+        div(class='event-title')= event.performance[0].displayName
+       div(class='event-flex')
+        each performance, i in event.performance
+         if i !== 0
+          a(target='_blank' href='/api/artist?q=#{performance.displayName}')
+           div(class='event-flex-item')= performance.displayName  
      else
-      div= event.displayName
+      div= event.displayName 
 
-     div #{event.venue.displayName}, #{event.location.city}
-     hr
+     div
+      div(class='event-location')= event.venue.displayName 
+      i(class='fas fa-map-marker-alt event-location-icon') 
+     a(class='event-link' target='_blank' href=event.uri) BUY TICKETS

@@ -48,10 +48,10 @@ router.get("/area", async (req, res) => {
     }
 
     let areas = []; // array of returned areas
-    const url = songkickBaseUrl + `search/locations.json?query=${query}&apikey=${songkickApiKey}`; // url to fetch
+    const url = `${songkickBaseUrl}search/locations.json?query=${query}&apikey=${songkickApiKey}`; // url to fetch
 
     const data = await axios.get(url).then(res => res.data.resultsPage);
-    
+
     // Throw an error if a bad request was made
     if (data.status === 'error') throw new Error('Invalid Request');
 
@@ -83,8 +83,13 @@ router.get("/upcomingEvents", async (req, res) => {
       return;
     }
 
+    // For some reason the upcoming endpoint can return past events
+    // So.. get current date and pass as min_date to request
+    // Format must be YYYY-MM-DD
+    const min_date = new Date().toISOString().split('T')[0];
+
     let events = []; // array or returned events
-    const url = songkickBaseUrl + `metro_areas/${id}/calendar.json?apikey=${songkickApiKey}`; // url to fetch
+    const url = `${songkickBaseUrl}metro_areas/${id}/calendar.json?apikey=${songkickApiKey}&min_date=${min_date}`; // url to fetch
 
     const data = await axios.get(url).then(res => res.data.resultsPage);
     
@@ -106,7 +111,7 @@ router.get("/upcomingEvents", async (req, res) => {
 
 router.get("/artist", async (req, res) => {
     try {
-        const query = req.query.artist;
+        const query = req.query.q;
         let artist
         let artists;
         let id;
