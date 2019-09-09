@@ -9,6 +9,10 @@ const spotifyApi = new SpotifyWebApi({
 const songkickApiKey = process.env.SONGKICK_API_KEY;
 const songkickBaseUrl = "https://api.songkick.com/api/3.0/";
 
+/**
+ * Authorize ourselves
+ * OATH Client Credentials Grant
+ */
 spotifyApi
   .clientCredentialsGrant()
   .then(data => {
@@ -64,6 +68,7 @@ router.get("/area", async (req, res) => {
     
     areas = data.results.location;
     res.render('areas', { areas, query });
+
   } catch (err) {
       console.log(err.message);
   }
@@ -103,7 +108,8 @@ router.get("/upcomingEvents", async (req, res) => {
     }
 
     events = data.results.event;
-    res.render('upcomingEvents', { events })
+    res.render('upcomingEvents', { events });
+
   } catch (err) {
     console.log(err.message);
   }
@@ -111,29 +117,29 @@ router.get("/upcomingEvents", async (req, res) => {
 
 router.get("/artist", async (req, res) => {
     try {
+        // Check if query string is valid
         const query = req.query.q;
-        let artist
-        let artists;
-        let id;
-        let albums;
-        let top_tracks;
-        let resolved;
-
-        artists = await spotifyApi.searchArtists(query, {limit: 1}).then(res => res.body.artists.items)
-
-        if (artists.length > 0) {
-          artist = artists[0];
-          id = artist.id;
-        } else {
+        if (!isValid(query)) {
           res.render('noResults');
           return;
         }
 
-        albums = spotifyApi.getArtistAlbums(`${id}`, { include_groups: 'album' }).then(res => res.body.items)
-        top_tracks = spotifyApi.getArtistTopTracks(`${id}`, 'AU').then(res => res.body.tracks)
-        resolved = await Promise.all([albums, top_tracks]);
+        artists = await spotifyApi.searchArtists(query, {limit: 1}).then(res => res.body.artists.items) // Search for the artist
 
-        res.render('artist',  { artist, albums: resolved[0], top_tracks: resolved[1] });
+        if (artists.length === 0) {
+          res.render('noResults');
+          return;
+        }
+
+        // Only grabbing the first result
+        const id = artists[0].id;
+
+        // Following API calls do not rely on each other so use Promise.all()
+        const albums = spotifyApi.getArtistAlbums(`${id}`, { include_groups: 'album' }).then(res => res.body.items)
+        const top_tracks = spotifyApi.getArtistTopTracks(`${id}`, 'AU').then(res => res.body.tracks)
+        const resolved = await Promise.all([albums, top_tracks]);
+
+        res.render('artist',  { artist: artists[0], albums: resolved[0], top_tracks: resolved[1] });
 
     } catch (err) {
         console.log(err.message);
