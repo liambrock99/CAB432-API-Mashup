@@ -71,6 +71,8 @@ router.get("/area", async (req, res) => {
 
   } catch (err) {
       console.log(err.message);
+      res.render('broken');
+      return;
   }
 });
 
@@ -112,6 +114,8 @@ router.get("/upcomingEvents", async (req, res) => {
 
   } catch (err) {
     console.log(err.message);
+    res.render('broken');
+    return;
   }
 });
 
@@ -143,6 +147,8 @@ router.get("/artist", async (req, res) => {
 
     } catch (err) {
         console.log(err.message);
+        res.render('broken');
+        return;
     }
 
 }) 

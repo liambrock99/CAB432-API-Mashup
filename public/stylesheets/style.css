@@ -12,6 +12,10 @@ body {
   background-color: white;
 }
 
+form {
+  color: black;
+}
+
 a {
   text-decoration: none;
   color: black;
@@ -177,14 +181,16 @@ a {
 
 .artist-grid-item-2 {
   padding-left: 15px;
+  position: relative;
 }
 
 .artist-name {
   font-size: 4em;
-  margin-bottom: 15px;
 }
 
 .artist-stats {
+  position: absolute;
+  bottom: 0;
   font-size: 1.5em;
 }
 
@@ -215,5 +221,17 @@ a {
 .artist-albums-text, .artist-tracks-text {
   font-size: 1.25em;
   margin-bottom: 20px;
+}
+
+.artist-albums-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.artist-albums-grid-item {
+  height: 300px;
+  width: 300px;
+  margin-bottom: 30px;
 }
 /* End artist.jade */
