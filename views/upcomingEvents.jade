@@ -12,10 +12,8 @@ block content
     div(class='event-result')
      div(class='event-tag') UPCOMING #{event.type.toUpperCase()}
 
-     if event.end
-      div #{event.start.date} to #{event.end.date}
-     else  
-      div= event.start.date
+     -var date = event.end ? `${event.start.date} to ${event.end.date}` : event.start.date   
+     div= date
 
      if event.performance.length > 0
       if event.type === 'Festival'

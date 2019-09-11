@@ -139,11 +139,12 @@ router.get("/artist", async (req, res) => {
         const id = artists[0].id;
 
         // Following API calls do not rely on each other so use Promise.all()
-        const albums = spotifyApi.getArtistAlbums(`${id}`, { include_groups: 'album' }).then(res => res.body.items)
-        const top_tracks = spotifyApi.getArtistTopTracks(`${id}`, 'AU').then(res => res.body.tracks)
-        const resolved = await Promise.all([albums, top_tracks]);
+        const albums = spotifyApi.getArtistAlbums(`${id}`, { include_groups: 'album' }).then(res => res.body.items);
+        const top_tracks = spotifyApi.getArtistTopTracks(`${id}`, 'AU').then(res => res.body.tracks);
+        const related_artists = spotifyApi.getArtistRelatedArtists(`${id}`).then(res => res.body.artists);
+        const resolved = await Promise.all([albums, top_tracks, related_artists]);
 
-        res.render('artist',  { artist: artists[0], albums: resolved[0], top_tracks: resolved[1] });
+        res.render('artist',  { artist: artists[0], albums: resolved[0], top_tracks: resolved[1], related_artists: resolved[2] });
 
     } catch (err) {
         console.log(err.message);
@@ -152,5 +153,4 @@ router.get("/artist", async (req, res) => {
     }
 
 }) 
-
 module.exports = router;

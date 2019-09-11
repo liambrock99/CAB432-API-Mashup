@@ -108,6 +108,7 @@ a {
   font-size: 12px;
   margin-bottom: 10px;
   width: 130px;
+  color:#121212;
 }
 
 .event-link {
@@ -120,6 +121,7 @@ a {
   border: 1px solid #009816;
   border-radius: 5px; 
   background-color: #009816;
+  color: #121212;
 }
 
 .event-flex {
@@ -162,7 +164,7 @@ a {
 .artist-grid {
   padding: 100px 200px;
   display: grid;
-  grid-template-rows: 300px auto auto;
+  grid-template-rows: 300px auto auto auto;
   grid-template-columns: 300px auto;
 }
 
@@ -171,11 +173,21 @@ a {
 }
 .artist-grid-item-1 {
   background-position: center;
-  background-size: contain;
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 3px;
 }
 
-.artist-grid-item-3, .artist-grid-item-4 {
+.artist-grid-item-3 {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.artist-grid-item-5 {
+  padding-bottom: 70px;
+} 
+
+.artist-grid-item-3, .artist-grid-item-4, .artist-grid-item-5 {
   grid-column: 1/-1;
 }
 
@@ -192,10 +204,6 @@ a {
   position: absolute;
   bottom: 0;
   font-size: 1.5em;
-}
-
-.artist-grid-item-3 {
-  padding: 60px 0px;
 }
 
 .artist-track {
@@ -218,7 +226,7 @@ a {
   width: 32px;
 }
 
-.artist-albums-text, .artist-tracks-text {
+.artist-albums-text, .artist-tracks-text, .related-artists-text {
   font-size: 1.25em;
   margin-bottom: 20px;
 }
@@ -226,12 +234,40 @@ a {
 .artist-albums-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 
 .artist-albums-grid-item {
   height: 300px;
   width: 300px;
+  margin-right: 30px;
   margin-bottom: 30px;
 }
+
+.artist-albums-grid-item:hover {
+  opacity: 0.8;
+}
+
+.related-artists-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.related-artist-img {
+  height: 80px;
+  width: 80px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+}
+
+.related-artist-container {
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+
+.related-artist-name {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
 /* End artist.jade */
