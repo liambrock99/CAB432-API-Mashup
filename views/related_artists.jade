@@ -7,7 +7,7 @@ block content
   else
    div(class='related-artists-text') You might like some of these artists   
    each artist in related_artists
-    -var related_artist_img_url = artist.images.length > 0 ? artist.images[2].url : no_img
+    -var related_artist_img_url = artist.images.length > 0 ? artist.images[0].url : no_img
     div(class='related-artist-result')
      div(class='related-artist-img' style='background-image: url(#{related_artist_img_url})')
      a(href='/api/artist?q=#{artist.name}' class='related-artist-result-name' target='_blank')= artist.name

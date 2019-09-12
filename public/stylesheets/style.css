@@ -248,6 +248,8 @@ a {
   width: 300px;
   margin-right: 30px;
   margin-bottom: 30px;
+  background-position: center;
+  background-size: contain;
 }
 
 .artist-albums-grid-item:hover {
