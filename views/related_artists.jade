@@ -1,0 +1,15 @@
+extends layout
+block content
+ - var no_img = 'https://static.thenounproject.com/png/340719-200.png'
+ div(class='related-artists-results')
+  if related_artists.length === 0
+   div(class='related-artists-text') Sorry! We couldn't find any artists related to #{artist}
+  else
+   div(class='related-artists-text') You might like some of these artists   
+   each artist in related_artists
+    -var related_artist_img_url = artist.images.length > 0 ? artist.images[2].url : no_img
+    div(class='related-artist-result')
+     div(class='related-artist-img' style='background-image: url(#{related_artist_img_url})')
+     a(href='/api/artist?q=#{artist.name}' class='related-artist-result-name' target='_blank')= artist.name
+     a(href='/api/artistUpcomingEvents?q=#{artist.name}' class='related-artist-events-link') Find events
+    hr

@@ -271,3 +271,48 @@ a {
 }
 
 /* End artist.jade */
+
+/* Begin discover.jade */
+.discover-page {
+  padding: 4% 10%;
+}
+/* End discover.jade */
+
+/* Begin related_artists.jade */
+.related-artists-results {
+  padding: 4% 10%;
+}
+
+.related-artist-result {
+  display: flex;
+  font-size: 1.25em;
+  margin-bottom: 15px;
+}
+
+.related-artist-result a {
+  color: white;
+}
+
+.related-artist-result-name {
+  align-self: center;
+  margin-left: 15px;
+}
+
+.related-artist-events-link {
+  margin-left: auto;
+  align-self: center;
+}
+
+.related-artists-text {
+  font-size: 2em;
+  margin-bottom: 30px;
+}
+
+.related-artist-events-link {
+  color: white;
+}
+
+.related-artist-results hr {
+  margin-bottom: 30px;
+}
+/* End related_artists.jade */

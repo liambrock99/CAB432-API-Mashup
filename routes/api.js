@@ -46,8 +46,7 @@ router.get("/area", async (req, res) => {
     // Check if query string is valid
     const query = req.query.q;
     if (!isValid(query)) {
-      console.log('wasnt valid???')
-      res.render('noResults');
+      res.render('noResults', { query });
       return;
     }
 
@@ -61,8 +60,7 @@ router.get("/area", async (req, res) => {
 
     // If no results were found, render noResults.jade
     if (Object.keys(data.results).length === 0) {
-      console.log('whjatttt');
-      res.render('noResults');
+      res.render('noResults', { query });
       return;
     }
     
@@ -86,7 +84,7 @@ router.get("/upcomingEvents", async (req, res) => {
     // Check if query string is valid
     const id = req.query.id;
     if (!isValid(id)) {
-      res.render('noResults');
+      res.render('noResults', { query: id });
       return;
     }
 
@@ -105,7 +103,7 @@ router.get("/upcomingEvents", async (req, res) => {
 
     // If no results were found, render noResults.jade
     if (Object.keys(data.results).length === 0) {
-      res.render('noResults');
+      res.render('noResults', { query: id });
       return;
     }
 
@@ -124,14 +122,14 @@ router.get("/artist", async (req, res) => {
         // Check if query string is valid
         const query = req.query.q;
         if (!isValid(query)) {
-          res.render('noResults');
+          res.render('noResults', { query });
           return;
         }
 
-        artists = await spotifyApi.searchArtists(query, {limit: 1}).then(res => res.body.artists.items) // Search for the artist
+        const artists = await spotifyApi.searchArtists(query, {limit: 1}).then(res => res.body.artists.items) // Search for the artist
 
         if (artists.length === 0) {
-          res.render('noResults');
+          res.render('noResults', { query });
           return;
         }
 
@@ -151,6 +149,71 @@ router.get("/artist", async (req, res) => {
         res.render('broken');
         return;
     }
-
 }) 
+
+router.get('/related_artists', async (req, res) => {
+  try {
+    // Check if query string is valid
+    const query = req.query.q;
+    if (!isValid(query)) {
+      res.render('noResults', { query });
+      return;
+    }
+
+    const artist = await spotifyApi.searchArtists(query, {limit: 1}).then(res => res.body.artists.items) // Search for the artist
+
+    if (artist.length === 0) {
+      res.render('noResults', { query });
+      return;
+    }
+
+    const id = artist[0].id;
+    const related_artists = await spotifyApi.getArtistRelatedArtists(`${id}`).then(res => res.body.artists);
+
+    res.render('related_artists', { artist: artist[0].name, related_artists })
+    
+  } catch (err) {
+    console.log(err.message);
+    res.render('broken');
+    return;
+  }
+})
+
+router.get('/artistUpcomingEvents', async (req, res) => {
+  try {
+    // Check if query string is valid
+    const query = req.query.q;
+    if (!isValid(query)) {
+      res.render('noResults', { query });
+      return;
+    }
+    
+    // Attempt to find the artists songkick artist_id
+    const url1 = `${songkickBaseUrl}search/artists.json?apikey=${songkickApiKey}&query=${query}`;
+    const artist = await axios.get(url1).then(res => res.data.resultsPage);
+
+    // Throw an error if a bad request was made
+    if (artist.status === 'error') throw new Error('Invalid Request');
+
+    // If no results were found, render noResults.jade
+    if (Object.keys(artist.results).length === 0) {
+      res.render('noResults', { query });
+      return;
+    }
+
+    // Just getting first result
+    const id = artist.results.artist[0].id;
+
+    // Get upcoming events for artist
+    const url2 = `${songkickBaseUrl}artists/${id}/calendar.json?apikey=${songkickApiKey}`;
+    const events = await axios.get(url2).then(res => res.data.resultsPage);
+
+    res.render('upcomingEvents', { events: events.results.event });
+  } catch (err) {
+    console.log(err.message);
+    res.render('broken');
+    return;
+  }
+})
+
 module.exports = router;

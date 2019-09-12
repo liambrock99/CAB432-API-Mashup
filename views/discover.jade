@@ -1,6 +1,7 @@
 extends layout
 block content
- h1 hello
- h1 hello
- h1 hello
- h1 hello
+ div(class='discover-page') 
+  div Discover new music loll
+  form(class='pure-form' method='GET' action='/api/related_artists')
+   input(class='pure-input-1-4' type='text' name='q' placeholder='Frank Ocean')
+   button(class='pure-button pure-button-primary' type='submit') Go
