@@ -1,7 +1,8 @@
 extends layout
 block content
- div(class='discover-page') 
-  div Discover new music loll
-  form(class='pure-form' method='GET' action='/api/related_artists')
-   input(class='pure-input-1-4' type='text' name='q' placeholder='Frank Ocean')
-   button(class='pure-button pure-button-primary' type='submit') Go
+ div(class='index-banner discover-banner-image')
+  div(class='index-banner-item') 
+   div(class='index-banner-text') Discover related artists
+   form(class='pure-form' method='GET' action='/api/related_artists')
+    input(class='pure-input-1-4' type='text' name='q' placeholder='Frank Ocean')
+    button(class='pure-button pure-button-primary' type='submit') Go

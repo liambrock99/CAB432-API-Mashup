@@ -21,12 +21,19 @@ a {
   color: black;
 }
 
+.index-banner-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../index-banner.jpg'); 
+}
+
+.discover-banner-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../discover-banner.jpg'); 
+}
+
 /* Begin index.jade */
 .index-banner {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../index-banner.jpg'); 
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
