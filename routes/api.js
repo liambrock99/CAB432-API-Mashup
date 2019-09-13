@@ -11,7 +11,7 @@ const songkickBaseUrl = "https://api.songkick.com/api/3.0/";
 
 /**
  * Authorize ourselves
- * OATH Client Credentials Grant
+ * OATH2.0 Client Credentials Grant
  */
 spotifyApi
   .clientCredentialsGrant()
