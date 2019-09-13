@@ -208,6 +208,12 @@ router.get('/artistUpcomingEvents', async (req, res) => {
     const url2 = `${songkickBaseUrl}artists/${id}/calendar.json?apikey=${songkickApiKey}`;
     const events = await axios.get(url2).then(res => res.data.resultsPage);
 
+    // If no events were found, render noResults.jade
+    if (Object.keys(events.results).length === 0) {
+      res.render('noResults', { query });
+      return;
+    }
+
     res.render('upcomingEvents', { events: events.results.event });
   } catch (err) {
     console.log(err.message);

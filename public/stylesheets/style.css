@@ -37,7 +37,7 @@ a {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  height: 1000px;
+  height: 1300px;
 }
 
 .index-banner-item {
@@ -85,7 +85,7 @@ a {
 
 .area-result-contents hr {
   border: 0;
-  border-bottom: 1px dashed #ccc;
+  border-bottom: 1px solid #ccc;
   background: #999;
 }
 /* End areas.jade */
@@ -139,7 +139,7 @@ a {
 }
 
 .event-flex-item {
-  color: #0078e7;
+  color: #529de3;
   margin-right: 10px;
 }
 

@@ -4,7 +4,7 @@ block content
  div(class='events-results-page')
 
   div(class='events-results-explanation')
-   div(style='font-size: 2em') Results
+   div(style='font-size: 2em') Results 
    div Found #{events.length} upcoming events 
 
   div(class='events-results') 
@@ -35,6 +35,6 @@ block content
       div= event.displayName 
 
      div
-      div(class='event-location')= event.venue.displayName 
+      div(class='event-location') #{event.venue.displayName}, #{event.location.city} 
       i(class='fas fa-map-marker-alt event-location-icon') 
      a(class='event-link' target='_blank' href=event.uri) BUY TICKETS
